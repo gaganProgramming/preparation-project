@@ -7,7 +7,7 @@ type Person = {
 }
 
 function filterUser(users: Person[]): Person[]{
-    const result: Humans[] = [];
+    const result: Person[] = [];
     for(let index = 0; index < users.length; index++){
         if(users[index].age >= 18){
             result.push(users[index])
@@ -16,14 +16,14 @@ function filterUser(users: Person[]): Person[]{
     return result;
 }
 
-const person = [
+const usersDetails = [
     { name: 'Alice', age: 20, gender: 'male' },
     { name: 'Bobby', age: 17, gender: 'female' },
     { name: 'Charlie', age: 22, gender: 'female' },
     { name: 'David', age: 16, gender: 'male' },
 ];
 
-const adultsDetails = filterUser(person)
+const adultsDetails = filterUser(usersDetails)
 const adultNames = adultsDetails.map(user => user.name);
 console.log(adultsDetails);
 console.log(adultNames);
