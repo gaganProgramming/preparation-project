@@ -13,6 +13,7 @@ function getUserNames(users: User[]):string[]{
     }
     return result;
 }
+
 const users = [
     { name: 'Alice', age: 20, gender: 'male' },
     { name: 'Bobby', age: 17, gender: 'female' },

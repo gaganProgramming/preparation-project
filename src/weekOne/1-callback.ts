@@ -1,15 +1,16 @@
 
 //Callback fuctions -> Apply callback to every value.
-function doSomething(value:number[], callback: (value: number) => number):number[] {
-    const result:number[] = [];
+function transformArray(value:number[], transformation: (value: number) => number):number[] {
+    const transformedValues:number[] = [];
     for(let index= 0; index < value.length; index++){
-        result.push(callback(value[index]));
+        transformedValues.push(transformation(value[index]));
     }
-    return result;
+    return transformedValues;
 }
 
-const doubled = doSomething([1,2,3], (v)=> v * 2)
-console.log(doubled)
+const doubledValues = transformArray([1,2,3], (value)=> value * 2)
+console.log(doubledValues)
+
 
 
 

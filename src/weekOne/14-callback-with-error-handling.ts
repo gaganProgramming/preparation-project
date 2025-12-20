@@ -1,20 +1,23 @@
-function withErrorHandler(
-    fn: () => number,
-    onError: (message: string) => void
+// Function to execute a given operation and handle any errors that might occur
+
+function executeWithErrorHandling(
+    operation: () => number, // Operation to be executed (returns a number)
+    errorCallback: (errorMessage: string) => void // Callback for handling errors
 ): number | null {
     try {
-        return fn();
+        return operation(); // Attempt to execute the operation
     } catch (error) {
-        onError("An error occurred during execution");
-        return null;
+        errorCallback("An error occurred during execution");
+        return null;  // Return null if an error occurs
     }
 }
 
-const result = withErrorHandler(
+const operationResult = executeWithErrorHandling(
     () => {
-        throw new Error("Failed");
+        throw new Error("Failed"); // Simulate an error
+        // return 10;
     },
-    (msg) => console.error(msg)
+    (errorMsg) => console.error(errorMsg) // Log the error message
 );
-// null
-console.log(result);
+
+console.log(operationResult);// Output will be `null` since an error occurred
