@@ -142,7 +142,7 @@ export const TaskForm = ({
                         <HStack gap={3} pt={2}>
                             <Button
                                 variant="outline"
-                                colorPalette="gray"
+                                bg="white"
                                 flex={1}
                                 onClick={onCancel}
                                 disabled={isLoading}
