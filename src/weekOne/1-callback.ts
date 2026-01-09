@@ -1,4 +1,3 @@
-
 //Callback fuctions -> Apply callback to every value.
 function transformArray(value:number[], transformation: (value: number) => number):number[] {
     const transformedValues:number[] = [];

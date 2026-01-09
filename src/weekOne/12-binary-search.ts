@@ -1,5 +1,4 @@
 // Binary Search
-
 function binarySearch(values: number[], target: number): number {
     let left = 0;
     let right = values.length - 1;
@@ -13,7 +12,7 @@ function binarySearch(values: number[], target: number): number {
     return -1;
 }
 
-const search = binarySearch([1, 2, 3 , 4, 5], 5);
+const search = binarySearch([1, 2, 3, 4, 5], 5);
 console.log(search)
 
 
@@ -21,7 +20,7 @@ console.log(search)
 //  Initial Setup:
 //  values `[1, 2, 3, 4, 5]`
 // target : `5`
-// left: `0`
+// left: `0`oiwi
 // right: `4` (since the last index is `4`)
 
 // Iteration 1:
@@ -57,15 +56,22 @@ console.log(search)
 //     The search for `5` is successful, and the result is `4`.
 
 
-
-
-
-
-
-
-
-
-
+const arr = [1, 2, 3, 4, 5]
+function findMe(target: number, start: number, end: number){
+    if(start > end){
+        return "Not Found";
+    }
+    const middle = Math.floor((start + end)/2);
+    if(arr[middle] ===target){
+        return `Found it at index ${middle}` ;
+    }
+    if(arr[middle] > target){
+        return findMe(target, start, middle-1);
+    }
+    return findMe(target, middle + 1, end);  // search in the right half
+}
+const recursionSearch = (findMe(5, 0, arr.length-1));
+console.log(recursionSearch);
 
 
 
