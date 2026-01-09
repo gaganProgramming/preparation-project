@@ -1,4 +1,15 @@
 import { useState } from 'react';
+import {
+    Container,
+    Heading,
+    Text,
+    Button,
+    Flex,
+    HStack,
+    VStack,
+    Badge,
+} from '@chakra-ui/react';
+import { LuPlus } from 'react-icons/lu';
 import type { Task, CreateTaskPayload } from '../../types/task';
 import {
     useGetTasksQuery,
@@ -8,7 +19,6 @@ import {
 } from '../../store/api/taskApi';
 import { TaskList } from './TaskList';
 import { TaskForm } from './TaskForm';
-import './TaskManager.css';
 
 export const TaskManager = () => {
     // RTK Query hooks
@@ -97,37 +107,73 @@ export const TaskManager = () => {
         : null;
 
     return (
-        <div className="task-manager">
-            <header className="task-manager-header">
-                <div className="header-content">
-                    <h1>Task Manager</h1>
-                    <p className="header-subtitle">Manage your tasks efficiently</p>
-                </div>
-                <button className="btn btn-primary btn-add" onClick={handleOpenAddForm}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
+        <Container maxW="container.lg" py={8}>
+            {/* Header */}
+            <Flex
+                justify="space-between"
+                align="center"
+                mb={8}
+                p={6}
+                bg="gray.800"
+                borderRadius="xl"
+                boxShadow="lg"
+            >
+                <VStack align="start" gap={1}>
+                    <Heading
+                        size="2xl"
+                        bgGradient="to-r"
+                        gradientFrom="purple.400"
+                        gradientTo="cyan.400"
+                        bgClip="text"
+                    >
+                        Task Manager
+                    </Heading>
+                    <Text color="gray.400">Manage your tasks efficiently</Text>
+                </VStack>
+                <Button
+                    colorPalette="purple"
+                    size="lg"
+                    onClick={handleOpenAddForm}
+                >
+                    <LuPlus />
                     Add Task
-                </button>
-            </header>
+                </Button>
+            </Flex>
 
             {/* Stats Bar */}
             {tasks.length > 0 && (
-                <div className="stats-bar">
-                    <div className="stat">
-                        <span className="stat-value">{tasks.length}</span>
-                        <span className="stat-label">Total</span>
-                    </div>
-                    <div className="stat completed">
-                        <span className="stat-value">{completedCount}</span>
-                        <span className="stat-label">Completed</span>
-                    </div>
-                    <div className="stat pending">
-                        <span className="stat-value">{pendingCount}</span>
-                        <span className="stat-label">Pending</span>
-                    </div>
-                </div>
+                <HStack gap={4} mb={6} justify="center">
+                    <Badge
+                        size="lg"
+                        colorPalette="blue"
+                        variant="subtle"
+                        px={4}
+                        py={2}
+                        borderRadius="full"
+                    >
+                        Total: {tasks.length}
+                    </Badge>
+                    <Badge
+                        size="lg"
+                        colorPalette="green"
+                        variant="subtle"
+                        px={4}
+                        py={2}
+                        borderRadius="full"
+                    >
+                        Completed: {completedCount}
+                    </Badge>
+                    <Badge
+                        size="lg"
+                        colorPalette="orange"
+                        variant="subtle"
+                        px={4}
+                        py={2}
+                        borderRadius="full"
+                    >
+                        Pending: {pendingCount}
+                    </Badge>
+                </HStack>
             )}
 
             {/* Task List */}
@@ -151,6 +197,6 @@ export const TaskManager = () => {
                     isLoading={isAdding || isUpdating}
                 />
             )}
-        </div>
+        </Container>
     );
 };

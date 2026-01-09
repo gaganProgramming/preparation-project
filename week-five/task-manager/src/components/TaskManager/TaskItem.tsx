@@ -1,5 +1,14 @@
+import {
+    Box,
+    Flex,
+    Heading,
+    Text,
+    IconButton,
+    Checkbox,
+    Spinner,
+} from '@chakra-ui/react';
+import { LuPencil, LuTrash2 } from 'react-icons/lu';
 import type { Task } from '../../types/task';
-import './TaskManager.css';
 
 interface TaskItemProps {
     task: Task;
@@ -21,57 +30,70 @@ export const TaskItem = ({
     const isLoading = isDeleting || isUpdating;
 
     return (
-        <div className={`task-item ${task.completed ? 'completed' : ''} ${isLoading ? 'loading' : ''}`}>
-            <div className="task-content">
-                <div className="task-header">
-                    <label className="checkbox-container">
-                        <input
-                            type="checkbox"
-                            checked={task.completed}
-                            onChange={() => onToggleComplete(task)}
-                            disabled={isLoading}
-                        />
-                        <span className="checkmark"></span>
-                    </label>
-                    <h3 className={`task-title ${task.completed ? 'strikethrough' : ''}`}>
-                        {task.title}
-                    </h3>
-                </div>
-                <p className="task-description">{task.description}</p>
-                <span className="task-date">
-                    Created: {new Date(task.createdAt).toLocaleDateString()}
-                </span>
-            </div>
-            <div className="task-actions">
-                <button
-                    className="btn btn-edit"
-                    onClick={() => onEdit(task)}
-                    disabled={isLoading}
-                    title="Edit task"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
-                <button
-                    className="btn btn-delete"
-                    onClick={() => onDelete(task.id)}
-                    disabled={isLoading}
-                    title="Delete task"
-                >
-                    {isDeleting ? (
-                        <span className="spinner-small"></span>
-                    ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                        </svg>
-                    )}
-                </button>
-            </div>
-        </div>
+        <Box
+            bg="gray.800"
+            borderRadius="xl"
+            p={5}
+            boxShadow="md"
+            borderWidth="1px"
+            borderColor={task.completed ? 'green.600' : 'gray.700'}
+            opacity={isLoading ? 0.7 : 1}
+            transition="all 0.2s"
+            _hover={{ borderColor: 'purple.500', transform: 'translateY(-2px)' }}
+        >
+            <Flex justify="space-between" align="flex-start" gap={4}>
+                <Flex gap={4} flex={1}>
+                    <Checkbox.Root
+                        checked={task.completed}
+                        onCheckedChange={() => onToggleComplete(task)}
+                        disabled={isLoading}
+                        colorPalette="green"
+                        size="lg"
+                        mt={1}
+                    >
+                        <Checkbox.HiddenInput />
+                        <Checkbox.Control />
+                    </Checkbox.Root>
+                    <Box flex={1}>
+                        <Heading
+                            size="md"
+                            color={task.completed ? 'gray.500' : 'white'}
+                            textDecoration={task.completed ? 'line-through' : 'none'}
+                            mb={2}
+                        >
+                            {task.title}
+                        </Heading>
+                        <Text color="gray.400" mb={3}>
+                            {task.description}
+                        </Text>
+                        <Text fontSize="sm" color="gray.500">
+                            Created: {new Date(task.createdAt).toLocaleDateString()}
+                        </Text>
+                    </Box>
+                </Flex>
+                <Flex gap={2}>
+                    <IconButton
+                        aria-label="Edit task"
+                        variant="ghost"
+                        colorPalette="blue"
+                        size="sm"
+                        onClick={() => onEdit(task)}
+                        disabled={isLoading}
+                    >
+                        <LuPencil />
+                    </IconButton>
+                    <IconButton
+                        aria-label="Delete task"
+                        variant="ghost"
+                        colorPalette="red"
+                        size="sm"
+                        onClick={() => onDelete(task.id)}
+                        disabled={isLoading}
+                    >
+                        {isDeleting ? <Spinner size="sm" /> : <LuTrash2 />}
+                    </IconButton>
+                </Flex>
+            </Flex>
+        </Box>
     );
 };

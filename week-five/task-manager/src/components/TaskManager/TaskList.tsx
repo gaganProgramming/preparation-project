@@ -1,6 +1,14 @@
+import {
+    Box,
+    VStack,
+    Spinner,
+    Text,
+    Icon,
+    Heading,
+} from '@chakra-ui/react';
+import { LuCircleAlert, LuFileText } from 'react-icons/lu';
 import type { Task } from '../../types/task';
 import { TaskItem } from './TaskItem';
-import './TaskManager.css';
 
 interface TaskListProps {
     tasks: Task[];
@@ -25,45 +33,63 @@ export const TaskList = ({
 }: TaskListProps) => {
     if (isLoading) {
         return (
-            <div className="task-list-state">
-                <div className="spinner"></div>
-                <p>Loading tasks...</p>
-            </div>
+            <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                py={16}
+                bg="gray.800"
+                borderRadius="xl"
+            >
+                <Spinner size="xl" color="purple.400" />
+                <Text mt={4} color="gray.400">Loading tasks...</Text>
+            </Box>
         );
     }
 
     if (error) {
         return (
-            <div className="task-list-state error">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-                <p>Error loading tasks</p>
-                <span className="error-detail">{error}</span>
-            </div>
+            <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                py={16}
+                bg="gray.800"
+                borderRadius="xl"
+            >
+                <Icon color="red.400" boxSize={12}>
+                    <LuCircleAlert />
+                </Icon>
+                <Heading size="md" mt={4} color="red.400">Error loading tasks</Heading>
+                <Text color="gray.500" mt={2}>{error}</Text>
+            </Box>
         );
     }
 
     if (tasks.length === 0) {
         return (
-            <div className="task-list-state empty">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                <p>No tasks yet</p>
-                <span>Click "Add Task" to create your first task</span>
-            </div>
+            <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                py={16}
+                bg="gray.800"
+                borderRadius="xl"
+            >
+                <Icon color="gray.500" boxSize={12}>
+                    <LuFileText />
+                </Icon>
+                <Heading size="md" mt={4} color="gray.400">No tasks yet</Heading>
+                <Text color="gray.500" mt={2}>Click "Add Task" to create your first task</Text>
+            </Box>
         );
     }
 
     return (
-        <div className="task-list">
+        <VStack gap={4} align="stretch">
             {tasks.map((task) => (
                 <TaskItem
                     key={task.id}
@@ -75,6 +101,6 @@ export const TaskList = ({
                     isUpdating={updatingId === task.id}
                 />
             ))}
-        </div>
+        </VStack>
     );
 };

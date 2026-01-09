@@ -1,8 +1,12 @@
 import { TaskManager } from './components/TaskManager'
-import './App.css'
+import { Box } from '@chakra-ui/react'
 
 function App() {
-  return <TaskManager />
+  return (
+    <Box minH="100vh" bg="gray.900">
+      <TaskManager />
+    </Box>
+  )
 }
 
 export default App

@@ -1,6 +1,18 @@
 import { useState, useEffect } from 'react';
+import {
+    Box,
+    Button,
+    Heading,
+    Input,
+    Textarea,
+    VStack,
+    HStack,
+    IconButton,
+    Spinner,
+    Field,
+} from '@chakra-ui/react';
+import { LuX } from 'react-icons/lu';
 import type { Task, CreateTaskPayload } from '../../types/task';
-import './TaskManager.css';
 
 interface TaskFormProps {
     onSubmit: (data: CreateTaskPayload) => void;
@@ -53,70 +65,111 @@ export const TaskForm = ({
     };
 
     return (
-        <div className="modal-overlay" onClick={onCancel}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2>{isEditMode ? 'Edit Task' : 'Add New Task'}</h2>
-                    <button className="btn-close" onClick={onCancel} disabled={isLoading}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-                <form onSubmit={handleSubmit} className="task-form">
-                    <div className="form-group">
-                        <label htmlFor="title">Title</label>
-                        <input
-                            type="text"
-                            id="title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Enter task title"
-                            disabled={isLoading}
-                            className={errors.title ? 'error' : ''}
-                        />
-                        {errors.title && <span className="error-message">{errors.title}</span>}
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            id="description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Enter task description"
-                            rows={4}
-                            disabled={isLoading}
-                            className={errors.description ? 'error' : ''}
-                        />
-                        {errors.description && (
-                            <span className="error-message">{errors.description}</span>
-                        )}
-                    </div>
-                    <div className="form-actions">
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            onClick={onCancel}
-                            disabled={isLoading}
-                        >
-                            Cancel
-                        </button>
-                        <button type="submit" className="btn btn-primary" disabled={isLoading}>
-                            {isLoading ? (
-                                <>
-                                    <span className="spinner-small"></span>
-                                    {isEditMode ? 'Updating...' : 'Adding...'}
-                                </>
-                            ) : isEditMode ? (
-                                'Update Task'
-                            ) : (
-                                'Add Task'
+        <Box
+            position="fixed"
+            inset={0}
+            bg="blackAlpha.700"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            zIndex={1000}
+            onClick={onCancel}
+        >
+            <Box
+                bg="gray.800"
+                borderRadius="xl"
+                p={6}
+                w="full"
+                maxW="md"
+                mx={4}
+                boxShadow="2xl"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <HStack justify="space-between" mb={6}>
+                    <Heading size="lg" color="white">
+                        {isEditMode ? 'Edit Task' : 'Add New Task'}
+                    </Heading>
+                    <IconButton
+                        aria-label="Close"
+                        variant="ghost"
+                        colorPalette="gray"
+                        onClick={onCancel}
+                        disabled={isLoading}
+                    >
+                        <LuX />
+                    </IconButton>
+                </HStack>
+
+                <form onSubmit={handleSubmit}>
+                    <VStack gap={5} align="stretch">
+                        <Field.Root invalid={!!errors.title}>
+                            <Field.Label color="gray.300">Title</Field.Label>
+                            <Input
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Enter task title"
+                                disabled={isLoading}
+                                bg="gray.700"
+                                borderColor={errors.title ? 'red.500' : 'gray.600'}
+                                color="white"
+                                _placeholder={{ color: 'gray.500' }}
+                                _focus={{ borderColor: 'purple.500' }}
+                            />
+                            {errors.title && (
+                                <Field.ErrorText>{errors.title}</Field.ErrorText>
                             )}
-                        </button>
-                    </div>
+                        </Field.Root>
+
+                        <Field.Root invalid={!!errors.description}>
+                            <Field.Label color="gray.300">Description</Field.Label>
+                            <Textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Enter task description"
+                                rows={4}
+                                disabled={isLoading}
+                                bg="gray.700"
+                                borderColor={errors.description ? 'red.500' : 'gray.600'}
+                                color="white"
+                                _placeholder={{ color: 'gray.500' }}
+                                _focus={{ borderColor: 'purple.500' }}
+                            />
+                            {errors.description && (
+                                <Field.ErrorText>{errors.description}</Field.ErrorText>
+                            )}
+                        </Field.Root>
+
+                        <HStack gap={3} pt={2}>
+                            <Button
+                                variant="outline"
+                                colorPalette="gray"
+                                flex={1}
+                                onClick={onCancel}
+                                disabled={isLoading}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                colorPalette="purple"
+                                flex={1}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Spinner size="sm" mr={2} />
+                                        {isEditMode ? 'Updating...' : 'Adding...'}
+                                    </>
+                                ) : isEditMode ? (
+                                    'Update Task'
+                                ) : (
+                                    'Add Task'
+                                )}
+                            </Button>
+                        </HStack>
+                    </VStack>
                 </form>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
