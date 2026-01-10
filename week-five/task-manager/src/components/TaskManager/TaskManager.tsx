@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     Container,
     Heading,
@@ -10,101 +9,30 @@ import {
     Badge,
 } from '@chakra-ui/react';
 import { LuPlus } from 'react-icons/lu';
-import type { Task, CreateTaskPayload } from '../../types/task';
-import {
-    useGetTasksQuery,
-    useAddTaskMutation,
-    useUpdateTaskMutation,
-    useDeleteTaskMutation,
-} from '../../store/api/taskApi';
+import { useTaskManager } from './useTaskManager';
 import { TaskList } from './TaskList';
 import { TaskForm } from './TaskForm';
 
 export const TaskManager = () => {
-    // RTK Query hooks
-    const { data: tasks = [], isLoading, error } = useGetTasksQuery();
-    const [addTask, { isLoading: isAdding }] = useAddTaskMutation();
-    const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
-    const [deleteTask] = useDeleteTaskMutation();
-
-    // Local UI state
-    const [isFormOpen, setIsFormOpen] = useState(false);
-    const [editingTask, setEditingTask] = useState<Task | null>(null);
-    const [deletingId, setDeletingId] = useState<string | null>(null);
-    const [updatingId, setUpdatingId] = useState<string | null>(null);
-
-    // Handlers
-    const handleOpenAddForm = () => {
-        setEditingTask(null);
-        setIsFormOpen(true);
-    };
-
-    const handleOpenEditForm = (task: Task) => {
-        setEditingTask(task);
-        setIsFormOpen(true);
-    };
-
-    const handleCloseForm = () => {
-        setIsFormOpen(false);
-        setEditingTask(null);
-    };
-
-    const handleSubmit = async (data: CreateTaskPayload) => {
-        try {
-            if (editingTask) {
-                // Update existing task
-                await updateTask({
-                    id: editingTask.id,
-                    title: data.title,
-                    description: data.description,
-                }).unwrap();
-            } else {
-                // Add new task
-                await addTask(data).unwrap();
-            }
-            handleCloseForm();
-        } catch (err) {
-            console.error('Failed to save task:', err);
-        }
-    };
-
-    const handleDelete = async (id: string) => {
-        if (window.confirm('Are you sure you want to delete this task?')) {
-            setDeletingId(id);
-            try {
-                await deleteTask({ id }).unwrap();
-            } catch (err) {
-                console.error('Failed to delete task:', err);
-            } finally {
-                setDeletingId(null);
-            }
-        }
-    };
-
-    const handleToggleComplete = async (task: Task) => {
-        setUpdatingId(task.id);
-        try {
-            await updateTask({
-                id: task.id,
-                completed: !task.completed,
-            }).unwrap();
-        } catch (err) {
-            console.error('Failed to update task:', err);
-        } finally {
-            setUpdatingId(null);
-        }
-    };
-
-    // Calculate stats
-    const completedCount = tasks.filter((t) => t.completed).length;
-    const pendingCount = tasks.length - completedCount;
-
-    // Error message extraction
-    const errorMessage = error
-        ? 'status' in error
-            ? `Error: ${error.status}`
-            : 'An error occurred'
-        : null;
+    const {
+        tasks,
+        isLoading,
+        error,
+        completedCount,
+        pendingCount,
+        isFormOpen,
+        editingTask,
+        deletingId,
+        updatingId,
+        isAdding,
+        isUpdating,
+        handleOpenAddForm,
+        handleOpenEditForm,
+        handleCloseForm,
+        handleSubmit,
+        handleDelete,
+        handleToggleComplete,
+    } = useTaskManager();
 
     return (
         <Container maxW="container.lg" py={8}>
@@ -180,7 +108,7 @@ export const TaskManager = () => {
             <TaskList
                 tasks={tasks}
                 isLoading={isLoading}
-                error={errorMessage}
+                error={error}
                 onEdit={handleOpenEditForm}
                 onDelete={handleDelete}
                 onToggleComplete={handleToggleComplete}
